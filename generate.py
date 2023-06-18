@@ -4,11 +4,6 @@ from typing import List
 import matplotlib.pyplot as plt
 
 
-SEED = 1234  # Change to any number you like
-random.seed(SEED)
-np.random.seed(SEED)
-
-
 # class Letter1:
 #     def __init__(self, pixels: List[List[bool]]):
 #         self.pixels = pixels
@@ -258,11 +253,23 @@ class Letter:
     def __init__(self, pixels):
         self.pixels = pixels
 
+    def __str__(self):
+        string = "-----\n"
+        for idx,p in enumerate(self.pixels):
+            string = f"{string}\n{idx} {p}"
+
+        return string
+
 def generate_letters(N=26, i=32, j=32, branch_rate=0.5, decay_rate=-0.25,
                      start_i=0.5, start_j=0.5, jitter=0.05, prune_threshold=4,
                      direction_weight=0.5, line_rate=0.5, line_decay=-0.1,
-                     max_lines=5, color_lines=False) -> List[Letter]:
+                     max_lines=5, color_lines=False, SEED = 1234) -> List[Letter]:
     letters = []
+
+      # Change to any number you like
+    random.seed(SEED)
+    np.random.seed(SEED)
+    print([random.random() for _ in range(5)], [np.random.random() for _ in range(5)])
     directions = [(0,1), (1,0), (0,-1), (-1,0), (1,1), (-1,-1), (-1,1), (1,-1)]
     for _ in range(N):
         # pixels is now an int array
@@ -443,10 +450,11 @@ def show_image(filename: str):
     Image.open(filename).show()
 
 if __name__ == '__main__':
-    new_letters = generate_letters(N=18, i=51, j=51, branch_rate=0.99, decay_rate=-0.01, start_i=0.5, start_j=0.5,
+    new_letters = generate_letters(N=1, i=51, j=51, branch_rate=0.99, decay_rate=-0.01, start_i=0.5, start_j=0.5,
                                    jitter=0.1, prune_threshold=5, direction_weight=.80, line_rate=0.99, line_decay=-0.01,
-                     max_lines=3, color_lines=False )
-
+                     max_lines=3, color_lines=False, SEED=1234 )
+    # for idx,ell in enumerate(new_letters):
+    #     print(f'{idx}: {str(ell)}')
     # new_letters = generate_letters(N=2, i=10, j=10, branch_rate=0.75, decay_rate=-0.05)
     make_letter_png(letters=new_letters, spacing=1, filename="new_letters.png",color_lines=False, max_width=480 )
     show_image("new_letters.png")
