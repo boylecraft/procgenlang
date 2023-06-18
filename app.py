@@ -1,4 +1,5 @@
 import random
+import ssl
 
 from flask import Flask, request, send_file
 from PIL import Image
@@ -41,6 +42,10 @@ def api_generate_letters():
     with open(filename, "rb") as image_file:
         encoded_string = b64encode(image_file.read()).decode('utf-8')
     return {'image': encoded_string}
+
+# SSL context setup
+ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+ssl_context.load_cert_chain('/etc/letsencrypt/live/games.boylecraft.net/fullchain.pem', '/etc/letsencrypt/live/games.boylecraft.net/privkey.pem')
 
     # return send_file(filename, mimetype='image/png')
 

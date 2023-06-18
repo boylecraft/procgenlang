@@ -35,7 +35,7 @@ data = {
 if LOCAL_MODE:
     url='http://127.0.0.1:5000'
 else:
-    url='http://games.boylecraft.net:5000'
+    url='https://games.boylecraft.net:5000'
 response = requests.post(f'{url}/api/generate_letters', json=data)
 
 from base64 import b64decode
