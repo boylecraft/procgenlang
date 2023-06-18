@@ -45,7 +45,7 @@ def api_generate_letters():
 
 # SSL context setup
 ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-ssl_context.load_cert_chain('/etc/letsencrypt/live/games.boylecraft.net/fullchain.pem', '/etc/letsencrypt/live/games.boylecraft.net/privkey.pem')
+ssl_context.load_cert_chain('~/ssl/fullchain.pem', '~/ssl/privkey.pem')
 
     # return send_file(filename, mimetype='image/png')
 
