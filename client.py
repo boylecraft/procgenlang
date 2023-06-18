@@ -9,8 +9,10 @@ N=18, i=51, j=51, branch_rate=0.99, decay_rate=-0.01, start_i=0.5, start_j=0.5,
                      max_lines=3, color_lines=False
                      '''
 
+LOCAL_MODE = False
+
 data = {
-    'N': 1,
+    'N': 20,
     'i': 51,
     'j': 51,
     'branch_rate': 0.99,
@@ -30,12 +32,15 @@ data = {
     'SEED' : 1234
 }
 
-url='http://127.0.0.1:5000'
+if LOCAL_MODE:
+    url='http://127.0.0.1:5000'
+else:
+    url='http://games.boylecraft.net:5000'
 response = requests.post(f'{url}/api/generate_letters', json=data)
 
 from base64 import b64decode
 
 # after the POST request
 image_data = b64decode(response.json()['image'])
-with open('letters.png', 'wb') as f:
+with open('letters_api.png', 'wb') as f:
     f.write(image_data)

@@ -35,9 +35,7 @@ def api_generate_letters():
 
     letters = generate_letters(N, i, j, branch_rate, decay_rate, start_i, start_j, jitter, prune_threshold, direction_weight, line_rate,
                                line_decay, max_lines, color_lines, SEED)
-    print(SEED)
-    for idx,ell in enumerate(letters):
-        print(f'{idx}: {str(ell)}')
+
     make_letter_png(letters, spacing, filename, color_lines, width)
 
     with open(filename, "rb") as image_file:

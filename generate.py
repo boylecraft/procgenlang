@@ -291,7 +291,7 @@ def generate_letters(N=26, i=32, j=32, branch_rate=0.5, decay_rate=-0.25,
         lines = 1
         while frontier or (lines < max_lines and np.random.rand() < current_line_rate):
             if not frontier:
-                print(f"newline: {lines}")
+                # print(f"newline: {lines}")
                 lines += 1
                 current_line_rate *= (1 + line_decay)
                 jitter_i = np.random.uniform(-jitter, jitter)
