@@ -36,3 +36,7 @@ The approach is roughly (from def generate_letters() docstring):
     :return: List[Letter]: list of Letter objects that can be passed to make_letter_png()
     '''
 ```
+
+See the code for details. 
+
+There's a crude prototype to 'play' with the settings on [itch](https://jmbjr.itch.io/alien-alphabet)
