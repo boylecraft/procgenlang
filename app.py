@@ -2,6 +2,7 @@ import random
 import ssl
 
 from flask import Flask, request, send_file
+from flask_cors import CORS
 from PIL import Image
 from io import BytesIO
 import base64
@@ -11,6 +12,7 @@ from generate import generate_letters, make_letter_png, Letter
 from base64 import b64encode
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/api/generate_letters', methods=['POST'])
 def api_generate_letters():
@@ -43,9 +45,6 @@ def api_generate_letters():
         encoded_string = b64encode(image_file.read()).decode('utf-8')
     return {'image': encoded_string}
 
-# SSL context setup
-ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-ssl_context.load_cert_chain('~/ssl/fullchain.pem', '~/ssl/privkey.pem')
 
     # return send_file(filename, mimetype='image/png')
 
