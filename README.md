@@ -41,4 +41,4 @@ See the code for details.
 
 There's a crude prototype to 'play' with the settings on [itch](https://jmbjr.itch.io/alien-alphabet)
 
-![Example Image using Godot prototype](./image.png)
+![Example Image using Godot prototype](./example.png)
