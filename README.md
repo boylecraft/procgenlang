@@ -40,3 +40,5 @@ The approach is roughly (from def generate_letters() docstring):
 See the code for details. 
 
 There's a crude prototype to 'play' with the settings on [itch](https://jmbjr.itch.io/alien-alphabet)
+
+![Example Image using Godot prototype](image.png)
