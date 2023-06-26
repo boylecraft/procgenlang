@@ -9,7 +9,7 @@ N=18, i=51, j=51, branch_rate=0.99, decay_rate=-0.01, start_i=0.5, start_j=0.5,
                      max_lines=3, color_lines=False
                      '''
 
-LOCAL_MODE = False
+LOCAL_MODE = True
 
 data = {
     'N': 20,
@@ -26,6 +26,7 @@ data = {
     'line_decay': -0.01,
     'max_lines': 3,
     'color_lines': False,
+    'connect_lines':True,
     'width': 480,
     'spacing': 1,
     'filename': 'letters.png',

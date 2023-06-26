@@ -11,18 +11,47 @@ def prune_pixels(pixels, threshold):
     :param threshold: int: how many neighbors will cause this pixel to be deleted
     :return: pruned set of pixels
     '''
-    i, j = pixels.shape
+    ht_max, wid_max = pixels.shape
     pruned = np.copy(pixels)
-    for y in range(i):
-        for x in range(j):
+    for y in range(ht_max):
+        for x in range(wid_max):
             count = 0
             for dx, dy in [(0,1), (1,0), (0,-1), (-1,0), (1,1), (-1,-1), (-1,1), (1,-1)]:
                 nx, ny = x + dx, y + dy
-                if (0 <= nx < j) and (0 <= ny < i) and pixels[ny][nx]:
+                if (0 <= nx < wid_max) and (0 <= ny < ht_max) and pixels[ny][nx]:
                     count += 1
             if count >= threshold:
                 pruned[y][x] = False
     return pruned
+
+def inbounds(x,y,wid_max, ht_max,k):
+    nx1, ny1, nx2, ny2 = x + k[0], y + k[1], x + k[2], y + k[3]
+    if nx1 <0 or nx2 < 0 or ny1 < 0 or ny2 < 0:
+        # print("out of bounds")
+        return False
+    if nx1 >= wid_max or nx2 >= wid_max or ny1 >= ht_max or ny2 >= ht_max:
+        # print("out of bounds")
+        return False
+    # print("in bounds")
+    # print(nx1, ny1, nx2, ny2)
+    # print(x,y,wid_max, ht_max, k)
+    return True
+def connect_pixels(pixels):
+    ht_max, wid_max = pixels.shape
+
+    # Make a copy of the grid to avoid modifying it while iterating
+    connected = np.copy(pixels)
+    for y in range(ht_max):
+        for x in range(wid_max):
+            # If the current cell is empty...
+            if pixels[y][x] == 0:
+                for k in [(-1,0,1,0), (0,-1,0,1), (-1,-1,1,1), (1,1,-1,-1)]:
+                    if inbounds(x,y,wid_max, ht_max, k):
+                        if pixels[y+k[1]][x+k[0]] > 0 and pixels[y+k[3]][x+k[2]] > 0:
+                            connected[y][x] = max(pixels[y+k[1]][x+k[0]], pixels[y+k[3]][x+k[2]])
+    return connected
+
+
 
 
 class Letter:
@@ -39,7 +68,7 @@ class Letter:
 def generate_letters(N=26, i=32, j=32, branch_rate=0.5, decay_rate=-0.25,
                      start_i=0.5, start_j=0.5, jitter=0.05, prune_threshold=4,
                      direction_weight=0.5, line_rate=0.5, line_decay=-0.1,
-                     max_lines=5, color_lines=False, SEED = None) -> List[Letter]:
+                     max_lines=5, color_lines=False, connect_lines=True, SEED = None) -> List[Letter]:
     '''
 
     This routine takes a bunch of inputs and applies really crude logic to try to create 'interesting' letters/characters.
@@ -123,13 +152,20 @@ def generate_letters(N=26, i=32, j=32, branch_rate=0.5, decay_rate=-0.25,
                         # Prioritize last direction using direction_weight
                         weights[directions.index(last_direction)] = direction_weight
                     for _ in range(8):
-                        direction_index = np.random.choice(8, p=weights/np.sum(weights))
+                        try:
+                            direction_index = np.random.choice(8, p=weights/np.sum(weights))
+                        except ValueError as e:
+                            direction_index = random.randint(0,7)
                         dx, dy = directions[direction_index]
                         nx, ny = x + dx, y + dy
                         if (0 <= nx < j) and (0 <= ny < i) and (np.random.rand() < current_branch_rate):
                             current_branch_rate *= (1 + decay_rate)
                             frontier.append((nx, ny))
                             last_direction = (dx, dy)
+        if connect_lines:
+            print("connecting")
+            for connect in range(10):
+                pixels = connect_pixels(pixels)
         pixels = prune_pixels(pixels, prune_threshold)
         if not color_lines:
             # if not color_lines, convert all nonzero entries to 1 (boolean array)
@@ -195,7 +231,7 @@ def show_image(filename: str):
 if __name__ == '__main__':
     new_letters = generate_letters(N=1, i=51, j=51, branch_rate=0.99, decay_rate=-0.01, start_i=0.5, start_j=0.5,
                                    jitter=0.1, prune_threshold=5, direction_weight=.80, line_rate=0.99, line_decay=-0.01,
-                     max_lines=3, color_lines=False, SEED=1234 )
+                     max_lines=3, color_lines=False, connect_lines=True, SEED=1234 )
 
     make_letter_png(letters=new_letters, spacing=1, filename="new_letters.png",color_lines=False, max_width=480 )
     show_image("new_letters.png")
